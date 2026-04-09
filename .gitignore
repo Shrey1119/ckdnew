@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 # OS/editor noise
 .DS_Store
 Thumbs.db
@@ -51,8 +52,66 @@ Backend/src/generated/prisma/
 CKDnew/model_artifacts/
 CKDnew/kidney_images/
 =======
+=======
+>>>>>>> 4169ab8 (chore: add comprehensive gitignore rules)
 node_modules
 dist
 .DS_Store
 *.local
+<<<<<<< HEAD
 >>>>>>> 8da9524 (Add Member D Frontend)
+=======
+=======
+# OS/editor noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.python-version
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Node/JS
+**/node_modules/
+**/.next/
+**/out/
+**/dist/
+**/build/
+**/coverage/
+**/*.tsbuildinfo
+
+# Prisma local DB and generated client output
+Backend/prisma/dev.db
+Backend/prisma/dev.db-journal
+Backend/src/generated/prisma/
+
+# ML/data artifacts
+CKDnew/model_artifacts/
+CKDnew/kidney_images/
+>>>>>>> 2a73f5e (chore: add comprehensive gitignore rules)
+>>>>>>> 4169ab8 (chore: add comprehensive gitignore rules)
