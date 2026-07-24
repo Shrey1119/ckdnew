@@ -1,0 +1,20 @@
+{
+  "classes": [
+    "Normal",
+    "Cyst",
+    "Tumor",
+    "Stone"
+  ],
+  "class_to_idx": {
+    "Normal": 0,
+    "Cyst": 1,
+    "Tumor": 2,
+    "Stone": 3
+  },
+  "idx_to_class": {
+    "0": "Normal",
+    "1": "Cyst",
+    "2": "Tumor",
+    "3": "Stone"
+  }
+}
