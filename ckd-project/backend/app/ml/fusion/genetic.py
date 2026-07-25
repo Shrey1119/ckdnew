@@ -10,12 +10,17 @@ from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.impute import SimpleImputer
 from sklearn.metrics import f1_score
-from deap import base, creator, tools, algorithms
+logger = logging.getLogger(__name__)
+
+try:
+    from deap import base, creator, tools, algorithms
+    HAS_DEAP = True
+except (ImportError, ModuleNotFoundError) as e:
+    logger.warning(f"DEAP genetic framework import failed ({e}). Genetic optimization will run in fallback mode.")
+    HAS_DEAP = False
 
 from app.config.config import settings
 from app.ml.tabular.knn_wrapper import knn_wrapper
-
-logger = logging.getLogger(__name__)
 
 # Cache variables to avoid reloading
 _X_val = None

@@ -20,9 +20,10 @@ class Settings(BaseSettings):
     
     # Model Paths
     SAVED_MODELS_DIR: str = Field(default="./saved_models", validation_alias="SAVED_MODELS_DIR")
-    # Existing KNN model paths relative to backend root
+    # Existing model paths relative to backend root
     EXISTING_KNN_MODEL_PATH: str = Field(default="../model_artifacts/phase1_knn_model.joblib", validation_alias="EXISTING_KNN_MODEL_PATH")
     EXISTING_KNN_FEATURES_PATH: str = Field(default="../model_artifacts/features.json", validation_alias="EXISTING_KNN_FEATURES_PATH")
+    EXISTING_RESNET_MODEL_PATH: str = Field(default="../model_artifacts/phase2_resnet.pth", validation_alias="EXISTING_RESNET_MODEL_PATH")
     
     # Dataset Paths
     DATASET_CSV_PATH: str = Field(default="../kidney_multimodal_dataset_FIXED.csv", validation_alias="DATASET_CSV_PATH")

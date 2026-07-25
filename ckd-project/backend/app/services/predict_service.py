@@ -1,15 +1,11 @@
 import logging
-import os
-import torch
 from pathlib import Path
 from sqlalchemy.orm import Session
-from PIL import Image
-from torchvision import transforms
 
 from app.config.config import settings
 from app.ml.tabular.knn_wrapper import knn_wrapper
 from app.ml.tabular.explainability import tabular_explainer
-from app.ml.image.resnet_model import ResNet18KidneyClassifier
+from app.ml.image_model_loader import image_model_loader
 from app.ml.image.explainability import generate_gradcam_image, CLASS_NAMES
 from app.ml.fusion.late_fusion import predict_late_fusion, compute_image_ckd_prob
 from app.ml.fusion.early_fusion import early_fusion_manager
@@ -19,44 +15,9 @@ logger = logging.getLogger(__name__)
 
 def get_image_prediction_probabilities(image_path: str) -> dict:
     """
-    Run the ResNet18 model and return the raw classification probabilities for the 4 categories.
+    Run the ResNet18 model via image_model_loader and return probabilities for the 4 categories.
     """
-    model_path = Path(settings.SAVED_MODELS_DIR) / "phase2_resnet18.pth"
-    if not model_path.exists():
-        # Fallback if training hasn't occurred yet (assign equal/simulated distribution based on path)
-        logger.warning(f"ResNet18 weights not found at {model_path}. Simulating class probabilities based on filename...")
-        img_name = Path(image_path).name.lower()
-        if "stone" in img_name:
-            probs = [0.05, 0.05, 0.1, 0.8]
-        elif "tumor" in img_name:
-            probs = [0.05, 0.05, 0.85, 0.05]
-        elif "cyst" in img_name:
-            probs = [0.05, 0.8, 0.1, 0.05]
-        else:
-            probs = [0.85, 0.05, 0.05, 0.05]
-        return dict(zip(CLASS_NAMES, probs))
-
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model = ResNet18KidneyClassifier(num_classes=4, pretrained=False)
-    model.load_state_dict(torch.load(model_path, map_location=device))
-    model = model.to(device)
-    model.eval()
-
-    transform = transforms.Compose([
-        transforms.Resize((settings.IMAGE_SIZE, settings.IMAGE_SIZE)),
-        transforms.ToTensor(),
-        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-    ])
-
-    with Image.open(image_path) as img:
-        img = img.convert("RGB")
-        tensor = transform(img).unsqueeze(0).to(device)
-
-    with torch.no_grad():
-        outputs = model(tensor)
-        probabilities = torch.softmax(outputs, dim=1)[0].cpu().numpy()
-
-    return {CLASS_NAMES[i]: float(probabilities[i]) for i in range(len(CLASS_NAMES))}
+    return image_model_loader.predict_image_probs(image_path)
 
 def run_tabular_prediction(db: Session, payload: dict, user_id: int = None) -> dict:
     # 1. Run predictions

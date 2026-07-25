@@ -40,6 +40,7 @@ def predict_tabular(
         )
 
 @router.post("/predict/image", response_model=ImagePredictResponse)
+@router.post("/predictions/predict-image", response_model=ImagePredictResponse)
 async def predict_image(
     file: UploadFile = File(None),
     image_path: str = Form(None),

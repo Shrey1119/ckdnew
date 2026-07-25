@@ -18,12 +18,19 @@ class KNNModelWrapper:
     def load_model(self):
         try:
             if not self.model_path.exists():
-                # Fallback to parent dir if relative location changes
-                alt_model_path = Path(__file__).resolve().parents[4] / "model_artifacts" / "phase1_knn_model.joblib"
-                alt_features_path = Path(__file__).resolve().parents[4] / "model_artifacts" / "features.json"
-                if alt_model_path.exists():
-                    self.model_path = alt_model_path
-                    self.features_path = alt_features_path
+                # Check alternative locations up directory hierarchy
+                base_dir = Path(__file__).resolve().parent
+                candidates = [
+                    base_dir.parents[4] / "model_artifacts" / "phase1_knn_model.joblib", # CKD_main
+                    base_dir.parents[3] / "model_artifacts" / "phase1_knn_model.joblib",
+                    Path("../model_artifacts/phase1_knn_model.joblib"),
+                    Path("../../model_artifacts/phase1_knn_model.joblib")
+                ]
+                for cand in candidates:
+                    if cand.exists():
+                        self.model_path = cand
+                        self.features_path = cand.parent / "features.json"
+                        break
                 else:
                     raise FileNotFoundError(f"KNN model artifacts not found at {self.model_path}")
             
