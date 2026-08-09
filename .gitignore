@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # OS/editor noise
 .DS_Store
 Thumbs.db
@@ -49,3 +50,9 @@ Backend/src/generated/prisma/
 # ML/data artifacts
 CKDnew/model_artifacts/
 CKDnew/kidney_images/
+=======
+node_modules
+dist
+.DS_Store
+*.local
+>>>>>>> 8da9524 (Add Member D Frontend)
