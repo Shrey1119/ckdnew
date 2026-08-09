@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "X-GENO Auth",
-  description: "JWT auth portal for X-GENO backend",
+  title: "KidneyAI — CKD Detection System",
+  description: "AI-powered Chronic Kidney Disease Detection System",
 };
 
 export default function RootLayout({
