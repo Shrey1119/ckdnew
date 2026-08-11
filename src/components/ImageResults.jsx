@@ -6,7 +6,7 @@ export default function ImageResults({ predictionData, onNewUpload }) {
 
   // Default sample result if accessed without uploading
   const data = predictionData || {
-    filename: 'sample_kidney_ct.jpg',
+    filename: 'sample_ct.jpg',
     predicted_class: 'Normal',
     confidence: 0.982,
     probabilities: {
@@ -109,7 +109,7 @@ export default function ImageResults({ predictionData, onNewUpload }) {
                 Classification Result
               </div>
               <div style={{ fontSize: '1.4rem', fontWeight: 800 }}>
-                {predicted_class.toUpperCase()} KIDNEY
+                {predicted_class.toUpperCase()} 
               </div>
               <div style={{ fontSize: '0.85rem', marginTop: '0.2rem' }}>
                 Confidence: <strong>{(confidence * 100).toFixed(1)}%</strong>
