@@ -1,0 +1,96 @@
+{
+  "timestamp": "2026-09-22T16:11:04Z",
+  "best_fusion_model": "Cross-Attention Fusion",
+  "benchmarks": {
+    "Phase 1 KNN (Tabular)": {
+      "modality": "Tabular Clinical",
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "roc_auc": 1.0,
+      "confusion_matrix": [
+        [
+          165,
+          0
+        ],
+        [
+          0,
+          60
+        ]
+      ]
+    },
+    "Phase 2 ResNet (Image)": {
+      "modality": "CT Scan Image",
+      "accuracy": 0.2667,
+      "precision": 0.2667,
+      "recall": 1.0,
+      "f1_score": 0.4211,
+      "roc_auc": 0.4681,
+      "confusion_matrix": [
+        [
+          0,
+          165
+        ],
+        [
+          0,
+          60
+        ]
+      ]
+    },
+    "Concatenation Fusion": {
+      "modality": "Multimodal (Concat)",
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "roc_auc": 1.0,
+      "confusion_matrix": [
+        [
+          165,
+          0
+        ],
+        [
+          0,
+          60
+        ]
+      ]
+    },
+    "Weighted Fusion": {
+      "modality": "Multimodal (Gated)",
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "roc_auc": 1.0,
+      "confusion_matrix": [
+        [
+          165,
+          0
+        ],
+        [
+          0,
+          60
+        ]
+      ]
+    },
+    "Cross-Attention Fusion": {
+      "modality": "Multimodal (Attention)",
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "roc_auc": 1.0,
+      "confusion_matrix": [
+        [
+          165,
+          0
+        ],
+        [
+          0,
+          60
+        ]
+      ]
+    }
+  }
+}

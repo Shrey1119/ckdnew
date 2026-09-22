@@ -8,19 +8,30 @@
   - `train_phase1_knn.py`
   - `predict_cli.py`
 
-## Phase 2 - Image Baseline (Implemented Scaffold)
-- Target: Kidney CT image classification (normal/cyst/tumor/stone)
-- Recommended model: ResNet18 transfer learning
-- Deliverable path: `phase2_image_baseline.py`
+## Phase 2 - Image Baseline (Implemented & Trained ✅)
+- Target: Kidney CT image classification (Normal / Cyst / Tumor / Stone)
+- Model: ResNet-18 transfer learning with ImageNet normalization & data augmentation
+- Script: `phase2_image_baseline.py`
+- Model Artifact: `model_artifacts/phase2_resnet.pth`
+- Standalone CLI: `predict_image_cli.py`
+- Report: `PHASE2_SPRINT1_MEMBER_A_REPORT.md`
 
-## Phase 3 - Multimodal Fusion (Implemented Scaffold)
-- Target: Fuse phase 1 tabular embeddings + phase 2 image embeddings
-- Recommended approach: Late fusion MLP / weighted averaging
-- Deliverable path: `phase3_multimodal_fusion.py`
+## Phase 3 - Multimodal Fusion (Implemented & Trained ✅)
+- Target: Fuse Phase 1 tabular clinical embeddings + Phase 2 ResNet image embeddings
+- Architectures Evaluated:
+  1. Early Feature Concatenation (`ConcatenationFusionModel`)
+  2. Modality-Gated Decision Fusion (`WeightedAverageFusionModel`)
+  3. Bi-directional Cross-Modal Attention (`CrossModalAttentionFusionModel` — Best Selected)
+- Script: `phase3_multimodal_fusion.py`
+- Model Artifacts: `model_artifacts/phase3_fusion_model.pth` & `ckd-project/backend/saved_models/phase3_fusion_model.pth`
+- Standalone CLI: `predict_multimodal_cli.py`
+- Visual Benchmark: `model_artifacts/phase3_comparison.png`
+- Metrics: `model_artifacts/phase3_metrics.json`
+- Report: `PHASE3_SPRINT2_MEMBER_B_REPORT.md`
 
-## Phase 4 - Genetic + Generative AI (Implemented Scaffold)
-- Genetic: optimize feature subsets and fusion weights
-- Generative: augment minority classes using tabular/image generation
+## Phase 4 - Genetic + Generative AI (Upcoming Sprint 3)
+- Genetic: optimize feature subsets (DEAP) and fusion weights
+- Generative: augment minority classes using SMOTE / tabular GANs
 - Deliverable path: `phase4_genetic_generative.py`
 
 ## Training and Serving Sequence
