@@ -58,9 +58,28 @@ class FusionPredictResponse(BaseModel):
     risk_level: str
     tabular_prob: float
     image_prob: float
-    tabular_weight: float
-    image_weight: float
-    fusion_type: str # "late" or "early"
+    tabular_weight: float | None = 0.5
+    image_weight: float | None = 0.5
+    fusion_type: str = "cross_attention"
     image_class: str | None = None
+    ct_confidence: float | None = None
+    ct_confidence_probs: dict | None = None
     gradcam_url: str | None = None
     explainability: dict | None = None
+    meta: dict | None = None
+
+class ModelBenchmarkItem(BaseModel):
+    modality: str
+    accuracy: float
+    precision: float
+    recall: float
+    f1_score: float
+    roc_auc: float
+    confusion_matrix: list[list[int]] | None = None
+
+class ModelComparisonResponse(BaseModel):
+    best_fusion_model: str
+    timestamp: str | None = None
+    benchmarks: dict[str, ModelBenchmarkItem]
+    comparison_chart_url: str | None = None
+

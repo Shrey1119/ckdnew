@@ -13,7 +13,8 @@ from app.schemas.prediction import (
     TabularPredictRequest, 
     TabularPredictResponse, 
     ImagePredictResponse, 
-    FusionPredictResponse
+    FusionPredictResponse,
+    ModelComparisonResponse
 )
 from app.services import auth_service, predict_service
 
@@ -22,8 +23,10 @@ logger = logging.getLogger(__name__)
 
 # Access checkers
 doctor_or_admin = auth_service.RoleChecker(["doctor", "admin"])
+any_role = auth_service.RoleChecker(["doctor", "researcher", "admin"])
 
 @router.post("/predict/tabular", response_model=TabularPredictResponse)
+@router.post("/predictions/predict-tabular", response_model=TabularPredictResponse)
 def predict_tabular(
     request: TabularPredictRequest,
     db: Session = Depends(get_db),
@@ -50,7 +53,6 @@ async def predict_image(
     # Handle image source
     local_path = None
     if file:
-        # Save file to uploads
         uploads_dir = Path(settings.UPLOAD_DIR)
         os.makedirs(uploads_dir, exist_ok=True)
         file_path = uploads_dir / file.filename
@@ -59,10 +61,8 @@ async def predict_image(
             shutil.copyfileobj(file.file, f)
         local_path = str(file_path)
     elif image_path:
-        # Check absolute or relative paths
         p = Path(image_path)
         if not p.exists():
-            # Try path relative to CSV
             p = Path(settings.DATASET_CSV_PATH).parent / image_path
             
         if p.exists():
@@ -88,18 +88,18 @@ async def predict_image(
         )
 
 @router.post("/predict/fusion", response_model=FusionPredictResponse)
-async def predict_fusion(
-    # Accept clinical parameters as Form data because we are doing a mixed file+data upload
+@router.post("/predict/multimodal", response_model=FusionPredictResponse)
+@router.post("/predictions/predict-multimodal", response_model=FusionPredictResponse)
+async def predict_multimodal(
     patient_data: str = Form(...), 
     file: UploadFile = File(None),
     image_path: str = Form(None),
-    fusion_type: str = Form("late"),
+    fusion_type: str = Form("cross_attention"),
     tabular_weight: float = Form(None),
     image_weight: float = Form(None),
     db: Session = Depends(get_db),
     current_user: User = Depends(doctor_or_admin)
 ):
-    # Parse patient data JSON
     try:
         payload = json.loads(patient_data)
     except Exception:
@@ -108,10 +108,8 @@ async def predict_fusion(
             detail="patient_data parameter must be a valid JSON string"
         )
         
-    # Handle image source
     local_path = None
     if file:
-        # Save file to uploads
         uploads_dir = Path(settings.UPLOAD_DIR)
         os.makedirs(uploads_dir, exist_ok=True)
         file_path = uploads_dir / file.filename
@@ -138,7 +136,7 @@ async def predict_fusion(
         )
         
     try:
-        result = predict_service.run_fusion_prediction(
+        result = predict_service.run_multimodal_prediction(
             db,
             payload,
             local_path,
@@ -154,3 +152,83 @@ async def predict_fusion(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Multimodal prediction failed: {str(e)}"
         )
+
+@router.get("/predictions/compare", response_model=ModelComparisonResponse)
+@router.get("/predict/compare", response_model=ModelComparisonResponse)
+def get_model_comparison(
+    current_user: User = Depends(any_role)
+):
+    """
+    Returns comparative evaluation metrics (accuracy, precision, recall, f1, roc_auc)
+    across Phase 1 KNN, Phase 2 ResNet-18, and Phase 3 Fusion architectures.
+    """
+    try:
+        return predict_service.get_model_comparison_metrics()
+    except Exception as e:
+        logger.error(f"Failed to get model comparison metrics: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to retrieve model comparison: {str(e)}"
+        )
+
+@router.post("/predictions/predict-optimized", response_model=FusionPredictResponse)
+@router.post("/predict/optimized", response_model=FusionPredictResponse)
+async def predict_optimized(
+    patient_data: str = Form(...), 
+    file: UploadFile = File(None),
+    image_path: str = Form(None),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(doctor_or_admin)
+):
+    """
+    Phase 4 Preview: Multimodal prediction with genetic-algorithm optimized weights.
+    """
+    try:
+        payload = json.loads(patient_data)
+    except Exception:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="patient_data parameter must be a valid JSON string"
+        )
+        
+    local_path = None
+    if file:
+        uploads_dir = Path(settings.UPLOAD_DIR)
+        os.makedirs(uploads_dir, exist_ok=True)
+        file_path = uploads_dir / file.filename
+        
+        with open(file_path, "wb") as f:
+            shutil.copyfileobj(file.file, f)
+        local_path = str(file_path)
+    elif image_path:
+        p = Path(image_path)
+        if not p.exists():
+            p = Path(settings.DATASET_CSV_PATH).parent / image_path
+            
+        if p.exists():
+            local_path = str(p)
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Reference image path {image_path} not found on server disk"
+            )
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Must supply either file upload or image_path"
+        )
+
+    try:
+        return predict_service.run_optimized_prediction(
+            db,
+            payload,
+            local_path,
+            user_id=current_user.id
+        )
+    except Exception as e:
+        logger.error(f"Optimized prediction failed: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Optimized prediction failed: {str(e)}"
+        )
+

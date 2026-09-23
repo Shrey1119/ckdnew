@@ -63,3 +63,8 @@ ckd-project/backend/saved_models/
 .idea/
 .DS_Store
 Thumbs.db
+
+# Model weights (too large for GitHub - >100MB)
+# Push phase2_incremental_progress.json and scripts only
+*.pth
+model_artifacts/*.pth

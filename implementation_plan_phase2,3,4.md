@@ -264,28 +264,28 @@ requirements-phase4.txt                 ← NEW: DEAP, imblearn deps
 **Focus**: API endpoints for all phases + database + service layer
 
 #### Sprint 1 (Week 1): Phase 2 Backend + Database
-- [ ] Create image upload endpoint: `POST /api/predictions/predict-image`
+- [x] Create image upload endpoint: `POST /api/predictions/predict-image`
   - Accept multipart image file
   - Load Phase 2 ResNet model
   - Return: predicted class (Normal/Cyst/Tumor/Stone), confidence, probabilities per class
-- [ ] Create `app/ml/image_model_loader.py` for loading ResNet model
-- [ ] Create `app/schemas/image_prediction.py` with request/response schemas
-- [ ] Set up database (SQLite for dev, PostgreSQL-ready):
+- [x] Create `app/ml/image_model_loader.py` for loading ResNet model
+- [x] Create `app/schemas/image_prediction.py` with request/response schemas
+- [x] Set up database (SQLite for dev, PostgreSQL-ready):
   - Patient table (optional demographics)
   - PredictionLog table (input features, prediction, confidence, timestamp)
   - Create SQLAlchemy models in `app/database/models.py`
   - Implement connection in `app/database/connection.py`
-- [ ] Add prediction logging to existing `/predict` endpoint
+- [x] Add prediction logging to existing `/predict` endpoint
 
 #### Sprint 2 (Week 2–3): Service Layer + Phase 3/4 Endpoints
-- [ ] Refactor prediction logic into `app/services/prediction_service.py`
-- [ ] Create multimodal endpoint: `POST /api/predictions/predict-multimodal`
+- [x] Refactor prediction logic into `app/services/prediction_service.py`
+- [x] Create multimodal endpoint: `POST /api/predictions/predict-multimodal`
   - Accept: JSON clinical data + multipart image
   - Run fusion model and return combined prediction
-- [ ] Create model comparison endpoint: `GET /api/predictions/compare`
+- [x] Create model comparison endpoint: `GET /api/predictions/compare`
   - Return metrics for all models (KNN, ResNet, Fusion)
-- [ ] Create Phase 4 optimized prediction endpoint
-- [ ] Add `GET /api/predictions/history` for prediction logs from database
+- [x] Create Phase 4 optimized prediction endpoint
+- [x] Add `GET /api/predictions/history` for prediction logs from database
 
 #### Sprint 3 (Week 3–4): Testing + Polish
 - [ ] Write unit tests (pytest) for all endpoints

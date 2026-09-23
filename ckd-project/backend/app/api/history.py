@@ -12,6 +12,7 @@ router = APIRouter(tags=["Patient History"])
 any_role = auth_service.RoleChecker(["doctor", "researcher", "admin"])
 
 @router.get("/history", response_model=HistoryListResponse)
+@router.get("/predictions/history", response_model=HistoryListResponse)
 def get_history(
     page: int = Query(default=1, ge=1),
     size: int = Query(default=10, ge=1, le=100),

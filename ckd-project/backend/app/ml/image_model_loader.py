@@ -55,7 +55,7 @@ class ImageModelLoader:
         try:
             logger.info(f"Loading ResNet18 model weights from {model_path}...")
             model = ResNet18KidneyClassifier(num_classes=4, pretrained=False)
-            checkpoint = torch.load(model_path, map_location=self._device)
+            checkpoint = torch.load(model_path, map_location=self._device, weights_only=False)
             
             if isinstance(checkpoint, dict) and "model_state_dict" in checkpoint:
                 state_dict = checkpoint["model_state_dict"]
